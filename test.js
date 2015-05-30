@@ -3,24 +3,42 @@ var test = require('ava');
 var osxBluetooth = require('./');
 
 if (!process.env.CI) {
-	test('get state', function (t) {
+	test('isOn()', function (t) {
 		t.plan(2);
 
-		osxBluetooth.get(function (err, state) {
+		osxBluetooth.isOn(function (err, state) {
 			t.assert(!err, err);
-			t.assert(typeof state === 'number');
+			t.assert(typeof state === 'boolean');
 		});
 	});
 
-	test('set state to 0', function (t) {
-		t.plan(3);
+	test('off(), on() and toggle()', function (t) {
+		t.plan(9);
 
-		osxBluetooth.set(0, function (err) {
+		osxBluetooth.off(function (err) {
 			t.assert(!err, err);
 
-			osxBluetooth.get(function (err, state) {
+			osxBluetooth.isOn(function (err, state) {
 				t.assert(!err, err);
-				t.assert(state === 0);
+				t.assert(state === false);
+
+				osxBluetooth.on(function (err) {
+					t.assert(!err, err);
+
+					osxBluetooth.isOn(function (err, state) {
+						t.assert(!err, err);
+						t.assert(state === true);
+
+						osxBluetooth.toggle(function (err) {
+							t.assert(!err, err);
+
+							osxBluetooth.isOn(function (err, state) {
+								t.assert(!err, err);
+								t.assert(state === false);
+							});
+						});
+					});
+				});
 			});
 		});
 	});

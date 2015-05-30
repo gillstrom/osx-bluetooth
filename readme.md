@@ -15,12 +15,20 @@ $ npm install --save osx-bluetooth
 ```js
 var osxBluetooth = require('osx-bluetooth');
 
-osxBluetooth.get(function (err, state) {
+osxBluetooth.isOn(function (err, state) {
 	console.log(state);
-	//=> 0
+	//=> false
 });
 
-osxBluetooth.set(1, function (err) {
+osxBluetooth.on(function (err) {
+	console.log('Bluetooth state changed to on');
+});
+
+osxBluetooth.off(function (err) {
+	console.log('Bluetooth state changed to off');
+});
+
+osxBluetooth.toggle(function (err) {
 	console.log('Bluetooth state changed to on');
 });
 ```

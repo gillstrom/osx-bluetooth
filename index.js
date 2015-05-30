@@ -4,20 +4,12 @@ var execFile = require('child_process').execFile;
 var bplistParser = require('bplist-parser');
 var plist = require('plist');
 
-exports.set = function (state, cb) {
+function changeState(state, cb) {
 	if (process.platform !== 'darwin') {
 		throw new Error('Only OS X systems are supported');
 	}
 
-	if (!Number(state) && state !== 0) {
-		throw new Error('First argument has to be a number');
-	}
-
-	if (state !== 1 && state !== 0) {
-		throw new Error('First argument has to be 1 or 0');
-	}
-
-	execFile('./bluetooth', [(state === 1 ? 'on' : 'off')], {cwd: __dirname}, function (err) {
+	execFile('./bluetooth', [(state === true ? 'on' : 'off')], {cwd: __dirname}, function (err) {
 		if (err) {
 			cb(err);
 			return;
@@ -25,9 +17,13 @@ exports.set = function (state, cb) {
 
 		cb();
 	});
-};
+}
 
-exports.get = function (cb) {
+function getState(cb) {
+	if (process.platform !== 'darwin') {
+		throw new Error('Only OS X systems are supported');
+	}
+
 	fs.readFile('/Library/Preferences/com.apple.Bluetooth.plist', function (err, res) {
 		if (err) {
 			cb(err);
@@ -50,6 +46,38 @@ exports.get = function (cb) {
 			return;
 		}
 
-		cb(null, state);
+		cb(null, state === 1 ? true : false);
 	});
+}
+
+exports.on = function (cb) {
+	changeState(true, cb);
+};
+
+exports.off = function (cb) {
+	changeState(false, cb);
+};
+
+exports.toggle = function (force, cb) {
+	if (typeof force === 'boolean') {
+		changeState(force, cb);
+		return;
+	}
+
+	if (typeof force === 'function' && typeof cb !== 'function') {
+		cb = force;
+	}
+
+	getState(function (err, state) {
+		if (err) {
+			cb(err);
+			return;
+		}
+
+		changeState(!state, cb);
+	});
+};
+
+exports.isOn = function (cb) {
+	getState(cb);
 };
