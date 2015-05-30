@@ -1,6 +1,6 @@
 {
   "name": "osx-bluetooth",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Get or set Bluetooth state on OS X systems",
   "license": "MIT",
   "repository": "gillstrom/osx-bluetooth",
