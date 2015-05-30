@@ -1,0 +1,35 @@
+{
+  "name": "osx-bluetooth",
+  "version": "1.0.0",
+  "description": "Get or set Bluetooth state on OS X systems",
+  "license": "MIT",
+  "repository": "gillstrom/osx-bluetooth",
+  "author": {
+    "name": "Andreas Gillström",
+    "email": "andreasgillstrom@gmail.com",
+    "url": "github.com/gillstrom"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "files": [
+    "index.js",
+    "bluetooth"
+  ],
+  "keywords": [
+    "apple",
+    "blue",
+    "bluetooth",
+    "bt",
+    "osx",
+    "tooth"
+  ],
+  "dependencies": {
+    "bplist-parser": "^0.1.0",
+    "meow": "^3.0.0",
+    "plist": "^1.1.0"
+  }
+}
