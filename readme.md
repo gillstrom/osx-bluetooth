@@ -26,6 +26,11 @@ osxBluetooth.set(1, function (err) {
 ```
 
 
+## CLI
+
+See the [bluetooth](https://github.com/gillstrom/bluetooth) CLI.
+
+
 ## License
 
 MIT © [Andreas Gillström](http://github.com/gillstrom)
