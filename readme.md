@@ -34,6 +34,31 @@ osxBluetooth.toggle(function (err) {
 ```
 
 
+## API
+
+### .isOn(callback)
+
+Check if bluetooth is on or off.
+
+### .on(callback)
+
+Turn bluetooth on.
+
+### .off(callback)
+
+Turn bluetooth off.
+
+### .toggle([force], callback)
+
+Toggle the bluetooth state.
+
+#### force
+
+Type: `boolean`
+
+Force a state when toggling.
+
+
 ## CLI
 
 See the [bluetooth](https://github.com/gillstrom/bluetooth) CLI.
