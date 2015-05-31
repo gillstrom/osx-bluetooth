@@ -8,19 +8,15 @@
  */
 
 #import <Foundation/Foundation.h>
-// link against IOBluetooth.framework
 
-
-inline int BTPowerState()
-{
+inline int BTPowerState() {
 	return IOBluetoothPreferenceGetControllerPowerState();
 }
 
-int BTSetPowerState(int powerState)
-{
+int BTSetPowerState(int powerState) {
 	IOBluetoothPreferenceSetControllerPowerState(powerState);
-
 	usleep(2000000); // wait until BT has been set
+
 	if (BTPowerState() != powerState) {
 		printf("Error: unable to turn Bluetooth %s\n", powerState ? "on" : "off");
 		return EXIT_FAILURE;
@@ -29,17 +25,15 @@ int BTSetPowerState(int powerState)
 	return EXIT_SUCCESS;
 }
 
-void BTStatus()
-{
+void BTStatus() {
 	printf("Status: %s\n", BTPowerState() ? "on" : "off");
 }
 
-int main(int argc, const char * argv[])
-{
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+int main(int argc, const char * argv[]) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	int result = EXIT_SUCCESS;
 
-    if (!IOBluetoothPreferencesAvailable()) {
+	if (!IOBluetoothPreferencesAvailable()) {
 		printf("Error: Bluetooth not available");
 		result = EXIT_FAILURE;
 	} else if (argc == 2 && strcmp(argv[1], "status") == 0) {
@@ -53,6 +47,6 @@ int main(int argc, const char * argv[])
 		result = EXIT_FAILURE;
 	}
 
-    [pool release];
-    return result;
+	[pool release];
+	return result;
 }

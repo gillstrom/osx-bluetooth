@@ -1,15 +1,17 @@
 'use strict';
-var fs = require('fs');
 var execFile = require('child_process').execFile;
+var fs = require('fs');
 var bplistParser = require('bplist-parser');
 var plist = require('plist');
 
 function changeState(state, cb) {
+	state = state === true ? 'on' : 'off';
+
 	if (process.platform !== 'darwin') {
 		throw new Error('Only OS X systems are supported');
 	}
 
-	execFile('./bluetooth', [(state === true ? 'on' : 'off')], {cwd: __dirname}, function (err) {
+	execFile('./bluetooth', state, {cwd: __dirname}, function (err) {
 		if (err) {
 			cb(err);
 			return;
@@ -20,6 +22,8 @@ function changeState(state, cb) {
 }
 
 function getState(cb) {
+	var state;
+
 	if (process.platform !== 'darwin') {
 		throw new Error('Only OS X systems are supported');
 	}
@@ -34,8 +38,6 @@ function getState(cb) {
 			cb(new Error('This computer does not have Bluetooth'));
 			return;
 		}
-
-		var state;
 
 		if (res[0] === 60) {
 			state = plist.parse(res.toString()).ControllerPowerState;
@@ -78,6 +80,4 @@ exports.toggle = function (force, cb) {
 	});
 };
 
-exports.isOn = function (cb) {
-	getState(cb);
-};
+exports.isOn = getState;
