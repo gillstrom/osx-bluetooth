@@ -3,40 +3,29 @@ var execFile = require('child_process').execFile;
 var fs = require('fs');
 var bplistParser = require('bplist-parser');
 var plist = require('plist');
+var pify = require('pify');
+var Promise = require('pinkie-promise');
 
-function changeState(state, cb) {
+function changeState(state) {
 	state = state === true ? 'on' : 'off';
 
 	if (process.platform !== 'darwin') {
-		throw new Error('Only OS X systems are supported');
+		return Promise.reject(new Error('Only OS X systems are supported'));
 	}
 
-	execFile('./bluetooth', state, {cwd: __dirname}, function (err) {
-		if (err) {
-			cb(err);
-			return;
-		}
-
-		cb();
-	});
+	return pify(execFile, Promise)('./bluetooth', [state], {cwd: __dirname});
 }
 
-function getState(cb) {
+function getState() {
 	var state;
 
 	if (process.platform !== 'darwin') {
-		throw new Error('Only OS X systems are supported');
+		return Promise.reject(new Error('Only OS X systems are supported'));
 	}
 
-	fs.readFile('/Library/Preferences/com.apple.Bluetooth.plist', function (err, res) {
-		if (err) {
-			cb(err);
-			return;
-		}
-
+	return pify(fs.readFile, Promise)('/Library/Preferences/com.apple.Bluetooth.plist').then(function (res) {
 		if (res.length < 1) {
-			cb(new Error('This computer does not have Bluetooth'));
-			return;
+			return Promise.reject(new Error('This computer does not have Bluetooth'));
 		}
 
 		if (res[0] === 60) {
@@ -44,39 +33,28 @@ function getState(cb) {
 		} else if (res[0] === 98) {
 			state = bplistParser.parseBuffer(res)[0].ControllerPowerState;
 		} else {
-			cb(new Error('Could not get current Bluetooth state'));
-			return;
+			return Promise.reject(new Error('Could not get current Bluetooth state'));
 		}
 
-		cb(null, state === 1 ? true : false);
+		return state === 1;
 	});
 }
 
-exports.on = function (cb) {
-	changeState(true, cb);
+exports.on = function () {
+	return changeState(true);
 };
 
-exports.off = function (cb) {
-	changeState(false, cb);
+exports.off = function () {
+	return changeState(false);
 };
 
-exports.toggle = function (force, cb) {
+exports.toggle = function (force) {
 	if (typeof force === 'boolean') {
-		changeState(force, cb);
-		return;
+		return changeState(force);
 	}
 
-	if (typeof force === 'function' && typeof cb !== 'function') {
-		cb = force;
-	}
-
-	getState(function (err, state) {
-		if (err) {
-			cb(err);
-			return;
-		}
-
-		changeState(!state, cb);
+	return getState().then(function (state) {
+		return changeState(!state);
 	});
 };
 

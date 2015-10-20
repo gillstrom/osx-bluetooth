@@ -30,6 +30,8 @@
   "dependencies": {
     "bplist-parser": "^0.1.0",
     "meow": "^3.0.0",
+    "pify": "^2.2.0",
+    "pinkie-promise": "^1.0.0",
     "plist": "^1.1.0"
   },
   "devDependencies": {
