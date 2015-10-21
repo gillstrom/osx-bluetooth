@@ -13,22 +13,22 @@ $ npm install --save osx-bluetooth
 ## Usage
 
 ```js
-var osxBluetooth = require('osx-bluetooth');
+const osxBluetooth = require('osx-bluetooth');
 
-osxBluetooth.isOn(function (err, state) {
+osxBluetooth.isOn().then(state => {
 	console.log(state);
 	//=> false
 });
 
-osxBluetooth.on(function (err) {
+osxBluetooth.on().then(() => {
 	console.log('Bluetooth state changed to on');
 });
 
-osxBluetooth.off(function (err) {
+osxBluetooth.off().then(() => {
 	console.log('Bluetooth state changed to off');
 });
 
-osxBluetooth.toggle(function (err) {
+osxBluetooth.toggle().then(() => {
 	console.log('Bluetooth state changed to on');
 });
 ```
@@ -36,21 +36,21 @@ osxBluetooth.toggle(function (err) {
 
 ## API
 
-### .isOn(callback)
+### .isOn()
 
-Check if bluetooth is on or off.
+Check if bluetooth is on or off. Returns a promise for a `boolean`.
 
-### .on(callback)
+### .on()
 
-Turn bluetooth on.
+Turn bluetooth on. Returns a promise.
 
-### .off(callback)
+### .off()
 
-Turn bluetooth off.
+Turn bluetooth off. Returns a promise.
 
-### .toggle([force], callback)
+### .toggle([force])
 
-Toggle the bluetooth state.
+Toggle the bluetooth state. Returns a promise.
 
 #### force
 
